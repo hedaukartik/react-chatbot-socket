@@ -3,6 +3,8 @@ const morgan = require("morgan"); //for development purpose to get the routes re
 const cookieParser = require("cookie-parser"); //Parse Cookie header and populate req.cookies
 const bodyParser = require("body-parser");
 const http = require("http");
+const socket = require("socket.io");
+const chatbotService = require("./service/chatbotService");
 
 //app
 const app = express();
@@ -15,6 +17,9 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+//train the AI
+chatbotService.trainChatBotIA();
+
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -22,3 +27,7 @@ const port = process.env.PORT || 8000;
 server.listen(port, () => {
 	console.log(`Listening on port ${port}`);
 });
+
+//socket connection
+const io = socket(server);
+chatbotService.connectWebSocket(io);
