@@ -5,9 +5,13 @@ const bodyParser = require("body-parser");
 const http = require("http");
 const socket = require("socket.io");
 const chatbotService = require("./service/chatbotService");
+const index = require("./routes/index");
 
 //app
 const app = express();
+
+//test app is working
+app.use(index);
 
 //create HTTP server
 const server = http.createServer(app);
