@@ -1,15 +1,18 @@
 const { NlpManager } = require("node-nlp");
 const manager = new NlpManager();
 const corpusJson = require("./corpus-en.json");
+const { dockStart } = require("@nlpjs/basic");
+let nlp;
 
 // 1 - Train the IA
 async function trainChatBotIA() {
 	return new Promise(async (resolve, reject) => {
 		// Adds the utterances and intents for the NLP
 		// // Train also the NLG
-		await manager.addCorpus(corpusJson);
-		await manager.train();
-		manager.save();
+		const dock = await dockStart({ use: ["Basic"] });
+		nlp = dock.get("nlp");
+		await nlp.addCorpus(corpusJson);
+		await nlp.train();
 		console.log("AI has been trained");
 		resolve(true);
 	});
@@ -18,25 +21,38 @@ async function trainChatBotIA() {
 async function generateResponseAI(qsm) {
 	// Train and save the mode
 	return new Promise(async (resolve, reject) => {
-		response = await manager.process("en", qsm);
+		response = await nlp.process("en", qsm);
 		resolve(response);
 	});
 }
 
 const connectWebSocket = (io) => {
-	io.on("connection", function (socket) {
+	io.on("connection", (socket) => {
 		socket.on("join", (userId) => {
 			socket.join(userId);
 			console.log("New user joined!");
+			socket.emit("send-msg-response", {
+				user: "A",
+				text: `Hi I'm Zeus Bot. How can I help you?`,
+				options: [],
+			});
 		});
 
 		socket.on("new-msg", async function (data) {
-			let response = await generateResponseAI(data.msg);
+			let response = await generateResponseAI(data.text);
 			io.to(data.room).emit(
 				"send-msg-response",
 				response.answer !== undefined
-					? response.answer
-					: "I am sorry, I don't understand :( "
+					? {
+							user: "A",
+							text: response.answer,
+							options: [],
+					  }
+					: {
+							user: "A",
+							text: "I am sorry, I don't understand :( ",
+							options: [],
+					  }
 			);
 		});
 	});

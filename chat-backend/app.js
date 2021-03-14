@@ -35,5 +35,9 @@ server.listen(port, () => {
 });
 
 //socket connection
-const io = socket(server);
+const io = socket(server, {
+	cors: {
+		origins: "*",
+	},
+});
 chatbotService.connectWebSocket(io);

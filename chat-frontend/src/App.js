@@ -1,25 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import logo from "./HappyPandaFace.svg";
+import ButtonIcon from "./HappyPandaFace.svg";
+import "./App.css";
+import { Chat } from "./components/Chat/Chat";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [showChatbot, toggleChatbot] = useState(false);
+	return (
+		<div className="App">
+			<header className="App-header">
+				<img src={logo} className="App-logo" alt="logo" />
+				<p>
+					Hey, what's up? I'm Zeus. I am here you help you out
+					anytime.
+				</p>
+			</header>
+			<div className="app-chatbot-container">
+				{showChatbot ? <Chat /> : null}
+			</div>
+			<button
+				className="app-chatbot-button"
+				onClick={() => toggleChatbot((prev) => !prev)}
+			>
+				Open
+			</button>
+		</div>
+	);
 }
 
 export default App;
