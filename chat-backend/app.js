@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser"); //Parse Cookie header and populat
 const bodyParser = require("body-parser");
 const http = require("http");
 const socket = require("socket.io");
+const cors = require("cors");
 const chatbotService = require("./service/chatbotService");
 const index = require("./routes/index");
 
@@ -20,6 +21,7 @@ const server = http.createServer(app);
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(cors());
 
 //train the AI
 chatbotService.trainChatBotIA();
