@@ -61,7 +61,7 @@ const MessageContainer = styled.div`
 	}
 `;
 
-export const Message = ({ message: { user, text }, name }) => {
+export const Message = ({ message: { user, message }, name }) => {
 	const [isSentByCurrentUser, setIsSentByCurrentUser] = useState(false);
 
 	const trimmedName = name.trim().toLowerCase();
@@ -74,13 +74,13 @@ export const Message = ({ message: { user, text }, name }) => {
 		<MessageContainer content="flex-start">
 			<p className="sentText pr-10">{trimmedName}</p>
 			<div className="messageBox backgroundBlue">
-				<p className="messageText colorWhite">{text}</p>
+				<p className="messageText colorWhite">{message}</p>
 			</div>
 		</MessageContainer>
 	) : (
 		<MessageContainer content="flex-end">
 			<div className="messageBox backgroundLight">
-				<p className="messageText colorDark">{text}</p>
+				<p className="messageText colorDark">{message}</p>
 			</div>
 			<p className="sentText pl-10">{user}</p>
 		</MessageContainer>

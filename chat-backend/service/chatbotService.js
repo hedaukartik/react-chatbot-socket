@@ -28,29 +28,29 @@ async function generateResponseAI(qsm) {
 
 const connectWebSocket = (io) => {
 	io.on("connection", (socket) => {
-		socket.on("join", (userId) => {
-			socket.join(userId);
+		socket.on("join", (room) => {
+			socket.join(room);
 			console.log("New user joined!");
 			socket.emit("send-msg-response", {
 				user: "A",
-				text: `Hi I'm Zeus Bot. How can I help you?`,
+				message: `Hi I'm Zeus Bot. How can I help you?`,
 				options: [],
 			});
 		});
 
 		socket.on("new-msg", async function (data) {
-			let response = await generateResponseAI(data.text);
+			let response = await generateResponseAI(data.message);
 			io.to(data.room).emit(
 				"send-msg-response",
 				response.answer !== undefined
 					? {
 							user: "A",
-							text: response.answer,
+							message: response.answer,
 							options: [],
 					  }
 					: {
 							user: "A",
-							text: "I am sorry, I don't understand :( ",
+							message: "I am sorry, I don't understand :( ",
 							options: [],
 					  }
 			);

@@ -12,6 +12,7 @@ let socket;
 
 export const Chat = () => {
 	const [room, setRoom] = useState(uuid());
+	const [name, setName] = useState("X");
 	const appName = "Zeus";
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
@@ -37,21 +38,24 @@ export const Chat = () => {
 		event.preventDefault();
 		console.log(message);
 		const data = {
-			text: message,
+			message: message,
 			room: room,
 			options: [],
+			user: name,
 		};
 
 		setMessages((msgs) => [...msgs, data]);
 		if (message) {
-			socket.emit("new-msg", data, () => setMessage(""));
+			socket.emit("new-msg", data, () => {
+				setMessage("");
+			});
 		}
 	};
 	return (
 		<ChatContainer>
 			<div className="container">
 				<InfoBar appName={appName} />
-				<Messages messages={messages} name={"X"} />
+				<Messages messages={messages} name={name} />
 				<Input
 					message={message}
 					setMessage={setMessage}
